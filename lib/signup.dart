@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:remote_patient_monitoring/main.dart';
+import 'package:email_validator/email_validator.dart';
 
 class SignUpWidget extends StatefulWidget {
   final Function() onClickedSignIn;
@@ -30,19 +31,29 @@ class _SignUpWidgetState extends State<SignUpWidget> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(height: 40,),
-          TextField(
+          TextFormField(
             controller: emailController,
             cursorColor: Colors.black87,
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(labelText: 'Email'),
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: (email) =>
+                email != null && !EmailValidator.validate(email)
+                    ? 'Enter a valid email'
+                    : null,
+
           ),
           SizedBox(height: 4,),
-          TextField(
+          TextFormField(
             controller: passwordController,
             cursorColor: Colors.black87,
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(labelText: 'Password'),
             obscureText: true,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: (value) => value != null && value.length < 8
+                ? 'Enter min 8 char'
+                : null,
           ),
           SizedBox(height: 20,),
           ElevatedButton.icon(
