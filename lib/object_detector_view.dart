@@ -86,7 +86,6 @@ class _ObjectDetectorView extends State<ObjectDetectorView> {
     final objects = await _objectDetector.processImage(inputImage);
     if (inputImage.inputImageData?.size != null &&
         inputImage.inputImageData?.imageRotation != null) {
-      debugPrint("here");
       final painter = ObjectDetectorPainter(
           objects,
           inputImage.inputImageData!.imageRotation,

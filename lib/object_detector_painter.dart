@@ -21,6 +21,8 @@ class ObjectDetectorPainter extends CustomPainter {
       ..color = Colors.lightGreenAccent;
 
     final Paint background = Paint()..color = Color(0x99000000);
+    // print("hereeeee are my objectsssss");
+    //
     for (final DetectedObject detectedObject in _objects) {
       final ParagraphBuilder builder = ParagraphBuilder(
         ParagraphStyle(
@@ -30,8 +32,9 @@ class ObjectDetectorPainter extends CustomPainter {
       );
       builder.pushStyle(
           ui.TextStyle(color: Colors.lightGreenAccent, background: background));
-
+      // print("objectsss");
       for (final Label label in detectedObject.labels) {
+        // print(label.text);
         builder.addText('${label.text} ${label.confidence}\n');
       }
 
