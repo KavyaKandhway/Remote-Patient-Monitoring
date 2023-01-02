@@ -21,6 +21,8 @@ class _ObjectDetectorView extends State<ObjectDetectorView> {
   bool _isBusy = false;
   CustomPaint? _customPaint;
   String? _text;
+  int timer=0;
+  bool _alert=false;
 
   @override
   void initState() {
@@ -43,7 +45,7 @@ class _ObjectDetectorView extends State<ObjectDetectorView> {
       customPaint: _customPaint,
       text: _text,
       onImage: (inputImage) {
-        processImage(inputImage);
+        processImage(inputImage,context);
       },
       onScreenModeChanged: _onScreenModeChanged,
       initialDirection: CameraLensDirection.back,
@@ -76,7 +78,7 @@ class _ObjectDetectorView extends State<ObjectDetectorView> {
     _canProcess = true;
   }
 
-  Future<void> processImage(InputImage inputImage) async {
+  Future<void> processImage(InputImage inputImage,BuildContext context) async {
     if (!_canProcess) return;
     if (_isBusy) return;
     _isBusy = true;
@@ -84,6 +86,64 @@ class _ObjectDetectorView extends State<ObjectDetectorView> {
       _text = '';
     });
     final objects = await _objectDetector.processImage(inputImage);
+    print("Objectsssssssssssssssssssssssssss");
+    print(objects.length);
+    bool flag=false;
+    for(int i=0;i<objects.length;i++){
+      if(objects[i].labels.isNotEmpty && objects[i].labels[0].text.toLowerCase()=='person' &&
+          objects[i].labels[0].confidence>=0.7){
+        print("person detected");
+        timer=0;
+        flag=true;
+      }
+    }
+    if(!flag){
+      timer++;
+    }
+    if(timer==1000){
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text("Alert Dialog Box"),
+          content: const Text("No Person Detected"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+              child: Container(
+                color: Colors.green,
+                padding: const EdgeInsets.all(14),
+                child: const Text("okay"),
+              ),
+            ),
+          ],
+        ),
+      );
+      _alert=true;
+    }
+
+    if(_alert && timer==0){
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text("Alert Dialog Box"),
+          content: const Text("Person is back"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+              child: Container(
+                color: Colors.green,
+                padding: const EdgeInsets.all(14),
+                child: const Text("okay"),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
     if (inputImage.inputImageData?.size != null &&
         inputImage.inputImageData?.imageRotation != null) {
       final painter = ObjectDetectorPainter(

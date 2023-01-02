@@ -55,7 +55,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                 ? 'Enter min 8 char'
                 : null,
           ),
-          SizedBox(height: 20,),
+          SizedBox(height: 20),
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
               minimumSize: Size.fromHeight(50),
@@ -64,7 +64,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
             label: Text('Sign Up', style: TextStyle(fontSize: 24),),
             onPressed: signUp,
           ),
-          SizedBox(height: 24,),
+          SizedBox(height: 24),
           RichText(
               text: TextSpan(
                   text: "Already having an account?  ",
