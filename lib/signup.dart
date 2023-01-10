@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:remote_patient_monitoring/main.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SignUpWidget extends StatefulWidget {
   final Function() onClickedSignIn;
@@ -65,6 +66,19 @@ class _SignUpWidgetState extends State<SignUpWidget> {
             onPressed: signUp,
           ),
           SizedBox(height: 24),
+          ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              minimumSize: Size.fromHeight(50),
+            ),
+            icon: Icon(Icons.g_mobiledata_rounded, size: 32,),
+            label: Text('Sign Up With Google', style: TextStyle(fontSize: 24),),
+            onPressed: () async {
+              UserCredential userCred = await signInWithGoogle();
+              if(userCred==null) {
+                print("null");
+              }
+            },
+          ),
           RichText(
               text: TextSpan(
                   text: "Already having an account?  ",
@@ -95,5 +109,18 @@ class _SignUpWidgetState extends State<SignUpWidget> {
       print(e);
     }
     navigatorKey.currentState!.popUntil((route)=>route.isFirst);
+  }
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 }
