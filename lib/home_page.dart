@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'object_detector_view.dart';
 
 class Home extends StatelessWidget {
@@ -20,8 +21,10 @@ class Home extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: [
-                  Text("Welcome "+user.email!),
-                  SizedBox(height: 20,),
+                  Text("Welcome " + user.email!),
+                  SizedBox(
+                    height: 20,
+                  ),
                   CustomCard('Object Detection', ObjectDetectorView()),
                   SizedBox(
                     height: 20,
@@ -30,9 +33,17 @@ class Home extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size.fromHeight(50),
                     ),
-                    icon: Icon(Icons.lock_outline, size: 20,),
-                    label: Text('Sign Out', style: TextStyle(fontSize: 16),),
-                    onPressed: signOut,
+                    icon: Icon(
+                      Icons.lock_outline,
+                      size: 20,
+                    ),
+                    label: Text(
+                      'Sign Out',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    onPressed: () {
+                      signOut(context);
+                    },
                   )
                 ],
               ),
@@ -42,8 +53,12 @@ class Home extends StatelessWidget {
       ),
     );
   }
-  Future signOut() async {
+
+  Future signOut(BuildContext context) async {
+    print("here");
     await FirebaseAuth.instance.signOut();
+    await GoogleSignIn().signOut();
+    Navigator.of(context).popUntil((route) => route.isFirst);
   }
 }
 
@@ -69,7 +84,7 @@ class CustomCard extends StatelessWidget {
           if (!featureCompleted) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content:
-                const Text('This feature has not been implemented yet')));
+                    const Text('This feature has not been implemented yet')));
           } else {
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => _viewPage));
