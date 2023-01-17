@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:remote_patient_monitoring/auth_page.dart';
 import 'package:remote_patient_monitoring/login.dart';
+import 'package:remote_patient_monitoring/loginnew.dart';
+import 'package:remote_patient_monitoring/signupnew.dart';
 import 'home_page.dart';
 import 'form_page.dart';
 
